@@ -1,0 +1,100 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
+apply plugin: 'maven-publish'
+apply plugin: 'com.mattwhipple.emacs-jdee'
+
+group = 'net.named-data.jndn-xx'
+version = '0.0.1'
+sourceCompatibility = JavaVersion.VERSION_1_7
+
+repositories {
+  jcenter()
+  mavenLocal()
+  mavenCentral()
+}
+
+dependencies {
+  compile 'com.google.guava:guava:18+'
+  testCompile 'junit:junit:4.+'
+}
+
+buildscript {
+  repositories {
+    jcenter()
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'com.mattwhipple.gradle:gradle-emacs-jdee:+'
+  }
+}
+
+task javadocJar(type: Jar) {
+  classifier = 'javadoc'
+  from javadoc
+}
+
+task sourcesJar(type: Jar) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+
+artifacts {
+  archives javadocJar, sourcesJar
+}
+
+signing {
+  required { gradle.taskGraph.hasTask("uploadArchives") }
+  sign configurations.archives
+}
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        try {
+          authentication(userName: ossrhUsername, password: ossrhPassword)
+        }
+        catch (Exception e) {
+        }
+      }
+
+      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+        try {
+          authentication(userName: ossrhUsername, password: ossrhPassword)
+        }
+        catch (Exception e) {
+        }
+      }
+
+      pom.project {
+        name 'jndn-cxx utilities'
+        packaging 'jar'
+        url 'https://github.com/cawka/jndn-xx-util'
+
+        scm {
+          connection 'scm:git:https://github.com/cawka/jndn-xx-util'
+          developerConnection 'scm:git:https://github.com/cawka/jndn-xx-util'
+          url 'https://github.com/cawka/jndn-xx-util'
+        }
+
+        licenses {
+          license {
+            name 'GNU Lesser General Public License, Version 3.0+'
+            url 'http://www.gnu.org/licenses/lgpl.html'
+          }
+        }
+
+        developers {
+          developer {
+            id 'cawka'
+            name 'Alexander Afanasyev'
+            email 'alexander.afanasyev@ucla.edu'
+          }
+        }
+      }
+    }
+  }
+}
