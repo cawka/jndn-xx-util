@@ -1,5 +1,7 @@
 # jndn-xx-util
 
+[![Build Status](https://travis-ci.org/cawka/jndn-xx-util.svg?branch=master)](https://travis-ci.org/cawka/jndn-xx-util)
+
 Various useful tools
 
 ## License
