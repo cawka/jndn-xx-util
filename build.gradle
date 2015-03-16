@@ -15,8 +15,8 @@ repositories {
 }
 
 dependencies {
-  compile 'com.google.guava:guava:18+'
-  testCompile 'junit:junit:4.+'
+  compile 'com.google.guava:guava:18.0'
+  testCompile 'junit:junit:4.12'
 }
 
 buildscript {
@@ -70,8 +70,9 @@ uploadArchives {
       }
 
       pom.project {
-        name 'jndn-cxx utilities'
+        name 'jndn-xx utilities'
         packaging 'jar'
+        description 'A set of utility components useful for Named Data Networking (NDN) applications'
         url 'https://github.com/cawka/jndn-xx-util'
 
         scm {
